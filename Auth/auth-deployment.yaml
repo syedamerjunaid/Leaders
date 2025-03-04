@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: auth
 spec:
-  replicas: 2  # Number of instances
+  replicas: 1
   selector:
     matchLabels:
       app: auth
@@ -14,9 +14,7 @@ spec:
     spec:
       containers:
       - name: auth
-        image: auth:latest  # Make sure to push the correct Docker image
+        image: auth:latest  # Must match your local Docker image
+        imagePullPolicy: Never  # Prevents Kubernetes from trying to pull from a registry
         ports:
         - containerPort: 5001
-        env:
-        - name: DATABASE_URL
-          value: "postgresql://user:password@postgres-service:5432/authdb"
