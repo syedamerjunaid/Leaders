@@ -1,18 +1,22 @@
-# Use an official Python runtime as a parent image
+# Use an official Python runtime as the base image
 FROM python:3.9
 
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy the entire project to the container
+# Copy only the requirements file first (for better caching)
+COPY requirements.txt .
+
+# Install dependencies inside a virtual environment
+RUN python -m venv venv && \
+    ./venv/bin/pip install --upgrade pip && \
+    ./venv/bin/pip install --no-cache-dir -r requirements.txt
+
+# Copy the rest of the app
 COPY . .
 
-# Install dependencies
-RUN pip install --no-cache-dir fastapi uvicorn psycopg2-binary
-
-# Expose the application port
+# Expose the FastAPI port
 EXPOSE 5001
 
-# Start the FastAPI application
-CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "5008"]
-  
+# Run the FastAPI app using the virtual environment
+CMD ["./venv/bin/uvicorn", "server:app", "--host", "0.0.0.0", "--port", "5001"]

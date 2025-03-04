@@ -1,0 +1,19 @@
+# FastAPI and ASGI server
+fastapi[all]==0.109.0
+uvicorn[standard]==0.27.0
+gunicorn==21.2.0
+
+# Database (PostgreSQL)
+psycopg2-binary==2.9.9
+SQLAlchemy==2.0.27
+
+# Security & Authentication
+bcrypt==4.1.2
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+
+# Environment Variables Management
+python-dotenv==1.0.1
+
+# Optional Dependencies (for advanced features)
+requests==2.31.0
