@@ -1,10 +1,10 @@
-# Use a lightweight Python image with Debian-based OS
+# Use a lightweight Python image
 FROM python:3.9-slim
 
 # Set the working directory inside the container
 WORKDIR /app
 
-# Install system dependencies for psycopg2
+# Install system dependencies (for psycopg2-binary)
 RUN apt-get update && apt-get install -y \
     gcc \
     libpq-dev \
@@ -13,14 +13,14 @@ RUN apt-get update && apt-get install -y \
 # Copy requirements.txt first (for caching)
 COPY requirements.txt .
 
-# Upgrade pip and install dependencies
+# Set pip timeout and use an alternative pip mirror
 RUN pip install --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
+    pip install --timeout=120 --no-cache-dir -r requirements.txt --index-url https://pypi.python.org/simple
 
 # Copy the rest of the app
 COPY . .
 
-# Expose the FastAPI application port
+# Expose the application port
 EXPOSE 5001
 
 # Run the FastAPI application
