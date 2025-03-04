@@ -1,10 +1,10 @@
-# Use an official Python runtime as the base image
+# Use an official Python runtime as a parent image
 FROM python:3.9
 
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy only the requirements file first (for better caching)
+# Copy requirements.txt first (for better caching)
 COPY requirements.txt .
 
 # Install dependencies inside a virtual environment
@@ -15,8 +15,8 @@ RUN python -m venv venv && \
 # Copy the rest of the app
 COPY . .
 
-# Expose the FastAPI port
+# Expose the FastAPI application port
 EXPOSE 5001
 
-# Run the FastAPI app using the virtual environment
+# Start the FastAPI app using the virtual environment
 CMD ["./venv/bin/uvicorn", "server:app", "--host", "0.0.0.0", "--port", "5001"]
