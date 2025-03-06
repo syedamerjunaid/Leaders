@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: training
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: training
+  template:
+    metadata:
+      labels:
+        app: training
+    spec:
+      containers:
+      - name: training
+        image: training:latest  # Must match your local Docker image
+        imagePullPolicy: Never  # Prevents Kubernetes from trying to pull from a registry
+        ports:
+        - containerPort: 5008

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: liberary
+spec:
+  selector:
+    app: liberary
+  ports:
+    - protocol: TCP
+      port: 5004      # Service inside Kubernetes
+      targetPort: 5004  # Your FastAPI app port
+      nodePort: 30004   # External access (change if needed)
+  type: NodePort  # This makes it accessible outside Kubernetes

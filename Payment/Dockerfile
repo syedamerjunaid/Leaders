@@ -16,7 +16,7 @@ RUN python -m venv venv && \
 COPY . .
 
 # Expose the FastAPI port
-EXPOSE 5001
+EXPOSE 5006
 
 # Run the FastAPI app using the virtual environment
-CMD ["./venv/bin/uvicorn", "server:app", "--host", "0.0.0.0", "--port", "5001"]
+CMD ["./venv/bin/uvicorn", "server:app", "--host", "0.0.0.0", "--port", "5006"]

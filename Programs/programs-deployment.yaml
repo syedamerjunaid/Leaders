@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: programs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: programs
+  template:
+    metadata:
+      labels:
+        app: programs
+    spec:
+      containers:
+      - name: programs
+        image: programs:latest  # Must match your local Docker image
+        imagePullPolicy: Never  # Prevents Kubernetes from trying to pull from a registry
+        ports:
+        - containerPort: 5008

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: forum
+spec:
+  selector:
+    app: forum
+  ports:
+    - protocol: TCP
+      port: 5003      # Service inside Kubernetes
+      targetPort: 5003  # Your FastAPI app port
+      nodePort: 30003   # External access (change if needed)
+  type: NodePort  # This makes it accessible outside Kubernetes
