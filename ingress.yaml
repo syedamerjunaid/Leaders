@@ -1,0 +1,68 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nextgen-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: nextgen.local
+    http:
+      paths:
+      - path: /auth
+        pathType: Prefix
+        backend:
+          service:
+            name: auth
+            port:
+              number: 5001
+      - path: /Community
+        pathType: Prefix
+        backend:
+          service:
+            name: community
+            port:
+              number: 5002
+      - path: /Forum
+        pathType: Prefix
+        backend:
+          service:
+            name: forum
+            port:
+              number: 5003
+      - path: /library
+        pathType: Prefix
+        backend:
+          service:
+            name: library
+            port:
+              number: 5004
+      - path: /Mentorship
+        pathType: Prefix
+        backend:
+          service:
+            name: mentorship
+            port:
+              number: 5005
+      - path: /Payment
+        pathType: Prefix
+        backend:
+          service:
+            name: payment
+            port:
+              number: 5006
+      - path: /Programs
+        pathType: Prefix
+        backend:
+          service:
+            name: programs
+            port:
+              number: 5007
+      - path: /Training
+        pathType: Prefix
+        backend:
+          service:
+            name: training
+            port:
+              number: 5008
