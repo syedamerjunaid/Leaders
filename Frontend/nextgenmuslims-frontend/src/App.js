@@ -4,7 +4,7 @@ import "./App.css";
 import Auth from "./components/Auth";
 import Login from "./components/Login";
 import Register from "./components/Register";
-import ProtectedRoute from "./components/ProtectedRoute";  // ✅ Import ProtectedRoute
+import ProtectedRoute from "./components/ProtectedRoute";
 import Library from "./components/Library";
 import Forum from "./components/Forum";
 import Community from "./components/Community";
@@ -12,6 +12,7 @@ import Mentorship from "./components/Mentorship";
 import Payment from "./components/Payment";
 import Programs from "./components/Programs";
 import Training from "./components/Training";
+import { isAuthenticated, logout } from "./utils/auth";  // ✅ Import logout function
 
 function App() {
   return (
@@ -22,9 +23,24 @@ function App() {
           <ul>
             <li><Link to="/">Home</Link></li>
             <li><Link to="/auth">Auth</Link></li>
-            <li><Link to="/login">Login</Link></li>
-            <li><Link to="/register">Register</Link></li>
-            <li><button onClick={logout}>Logout</button></li>
+
+            {!isAuthenticated() ? (
+              <>
+                <li><Link to="/login">Login</Link></li>
+                <li><Link to="/register">Register</Link></li>
+              </>
+            ) : (
+              <>
+                <li><Link to="/library">Library</Link></li>
+                <li><Link to="/forum">Forum</Link></li>
+                <li><Link to="/community">Community</Link></li>
+                <li><Link to="/mentorship">Mentorship</Link></li>
+                <li><Link to="/payment">Payment</Link></li>
+                <li><Link to="/programs">Programs</Link></li>
+                <li><Link to="/training">Training</Link></li>
+                <li><button onClick={logout} className="logout-btn">Logout</button></li> {/* ✅ Logout button added */}
+              </>
+            )}
           </ul>
         </nav>
 
@@ -33,7 +49,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
-          {/* 🔒 Protected Routes - Only logged-in users can access these */}
+          {/* 🔒 Protected Routes */}
           <Route element={<ProtectedRoute />}>
             <Route path="/library" element={<Library />} />
             <Route path="/forum" element={<Forum />} />
