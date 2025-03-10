@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import "./App.css";  // Add some CSS for styling
+import "./App.css";  
 import Library from "./components/Library";
 import Auth from "./components/Auth";
 import Forum from "./components/Forum";
@@ -9,6 +9,8 @@ import Mentorship from "./components/Mentorship";
 import Payment from "./components/Payment";
 import Programs from "./components/Programs";
 import Training from "./components/Training";
+import Login from "./components/Login";    // ✅ Added Login component
+import Register from "./components/Register";  // ✅ Added Register component
 
 function App() {
   return (
@@ -26,6 +28,8 @@ function App() {
             <li><Link to="/payment">Payment</Link></li>
             <li><Link to="/programs">Programs</Link></li>
             <li><Link to="/training">Training</Link></li>
+            <li><Link to="/login">Login</Link></li>  {/* ✅ Added Login link */}
+            <li><Link to="/register">Register</Link></li>  {/* ✅ Added Register link */}
           </ul>
         </nav>
 
@@ -38,6 +42,8 @@ function App() {
           <Route path="/payment" element={<Payment />} />
           <Route path="/programs" element={<Programs />} />
           <Route path="/training" element={<Training />} />
+          <Route path="/login" element={<Login />} />  {/* ✅ Added Login route */}
+          <Route path="/register" element={<Register />} />  {/* ✅ Added Register route */}
           <Route path="/" element={<h2>Welcome! Select a service above.</h2>} />
         </Routes>
       </div>
