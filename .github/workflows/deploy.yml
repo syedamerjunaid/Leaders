@@ -3,7 +3,7 @@ name: Deploy React Frontend
 on:
   push:
     branches:
-      - main  # Change this if using a different branch
+      - nextgenmuslims  # Change this if your branch is different
 
 jobs:
   build-and-deploy:
@@ -13,6 +13,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
+          persist-credentials: false  # ✅ Fix GitHub permission issues
           fetch-depth: 0  # ✅ Fixes history issues
 
       - name: Install Node.js
@@ -29,9 +30,10 @@ jobs:
         working-directory: Frontend/nextgenmuslims-frontend
 
       - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          branch: gh-pages
-          folder: Frontend/nextgenmuslims-frontend/build
-          token: ${{ secrets.GITHUB_TOKEN }}
-          clean: true  # ✅ Ensures old files don’t cause conflicts
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "github-actions@github.com"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+          git add -A
+          git commit -m "Deploying to GitHub Pages" || echo "No changes to commit"
+          git push origin gh-pages --force
