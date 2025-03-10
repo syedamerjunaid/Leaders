@@ -1,11 +1,16 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
 
 app = FastAPI()
 
-@app.get("/")
-def home():
-    return {"message": "Auth service is running!"}
+class User(BaseModel):
+    username: str
+    email: str
+    password: str
+    role: str
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=5001)
+@app.post("/register")  # ✅ Make sure this exists
+async def register(user: User):
+    if user.email == "existing@example.com":
+        raise HTTPException(status_code=400, detail="Email already exists")
+    return {"message": "User registered successfully", "user": user}
