@@ -3,7 +3,7 @@ name: Deploy React Frontend
 on:
   push:
     branches:
-      - nextgenmuslims # Change this if using a different branch
+      - main  # Change this if using a different branch
 
 jobs:
   build-and-deploy:
