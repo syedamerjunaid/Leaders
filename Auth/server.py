@@ -3,7 +3,7 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from pydantic import BaseModel, EmailStr
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
-from jose import jwt, JWTError  # Added `JWTError`
+from jose import jwt, JWTError
 from fastapi.middleware.cors import CORSMiddleware
 
 # 🔹 Secret key for JWT
@@ -31,8 +31,11 @@ class UserRegister(BaseModel):
     role: str
 
 # ✅ **User Database Model (Stored Data)**
-class UserInDB(UserRegister):
+class UserInDB(BaseModel):  # ✅ FIXED: No `password`, only `hashed_password`
+    username: str
+    email: EmailStr
     hashed_password: str
+    role: str
 
 # 🔹 Utility to hash passwords
 def hash_password(password: str):
@@ -54,22 +57,22 @@ def create_access_token(data: dict, expires_delta: timedelta = None):
 async def register(user: UserRegister):
     if user.email in fake_db:
         raise HTTPException(status_code=400, detail="Email already exists")
-    
+
     hashed_password = hash_password(user.password)
     fake_db[user.email] = UserInDB(
         username=user.username,
         email=user.email,
-        hashed_password=hashed_password,
+        hashed_password=hashed_password,  # ✅ FIXED FIELD
         role=user.role
-    )
-    
+    ).model_dump()  # ✅ Convert Pydantic object to dict
+
     return {"message": "User registered successfully"}
 
 # ✅ **User Login (returns JWT Token)**
 @app.post("/auth/login")
 async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     user = fake_db.get(form_data.username)
-    if not user or not verify_password(form_data.password, user.hashed_password):
+    if not user or not verify_password(form_data.password, user["hashed_password"]):  # ✅ FIXED DICTIONARY ACCESS
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
     access_token = create_access_token(data={"sub": form_data.username})
@@ -89,9 +92,14 @@ async def protected_route(token: str = Depends(oauth2_scheme)):
 # ✅ **Enable CORS (Fixing Syntax Issue)**
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # ✅ Fixed comma issue
+    allow_origins=["http://localhost:3000"],  # ✅ Allow only frontend origin
     allow_credentials=True,
-    allow_methods=["*"],  # ✅ Allow all HTTP methods (GET, POST, etc.)
-    allow_headers=["*"],  # ✅ Allow all headers
+    allow_methods=["GET", "POST", "OPTIONS"],  # ✅ Explicitly allow OPTIONS
+    allow_headers=["*"],
 )
+
+# ✅ **Handle CORS Preflight Requests**
+@app.options("/{full_path:path}")
+async def preflight_handler():
+    return {"message": "Preflight request successful"}
 
